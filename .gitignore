@@ -66,3 +66,19 @@ vcpkg_installed/
 # test output & cache
 Testing/
 .cache/
+<<<<<<< HEAD
+
+.vs/
+x64/
+x86/
+Debug/
+Release/
+build/
+*.obj
+*.pdb
+*.ilk
+*.ipch
+*.exe
+*.user
+=======
+>>>>>>> 2d84a2db5f11782755c2cd017335566ce8d6407b
