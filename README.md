@@ -4,9 +4,19 @@
 
 Este projeto consiste no desenvolvimento de um jogo inspirado em Terraria utilizando C++ e a biblioteca Raylib, incorporando recursos autorais (como assets, músicas e efeitos sonoros). O objetivo central é estudar desenvolvimento de jogos desde fundamentos até técnicas mais avançadas.
 
-## Dia 001: Gameloop, taxa de FPS e UPS estabilizada, player com movimentação em quatro direções
+## Dia 002: Adicionada Hitbox, renderização de um tile de terra.
 
 ![Day_002_Gif](./ProgressImages/Day002.gif)
+
+## Lista:
+
+✅ GameLoop, taxa fixa (60FPS, 120UPS);
+
+✅ Movimentação do jogador;
+
+✅ Renderizar um tile, adicionar hitbox;
+
+⏳ TileGrid, mais tiles;
 
 
 ## Referência:
