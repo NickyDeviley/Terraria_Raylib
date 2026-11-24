@@ -6,7 +6,7 @@ Este projeto consiste no desenvolvimento de um jogo inspirado em Terraria utiliz
 
 ## Dia 001: Gameloop, taxa de FPS e UPS estabilizada, player com movimentação em quatro direções
 
-![Day_001_Gif](./ProgressImages/Day001.gif)
+![Day_002_Gif](./ProgressImages/Day002.gif)
 
 
 ## Referência:
