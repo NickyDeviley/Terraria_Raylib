@@ -11,9 +11,9 @@ Este projeto consiste no desenvolvimento de um jogo inspirado em Terraria utiliz
 
 ## Referência:
 
-Utilizei um molde de projeto onde o Raylib já estava vinculado ao Cmake para ser buildado junto ao jogo. Este modelo foi distribuído de forma gratuita pelo dono do canal ![LowLevelGameDev](https://www.youtube.com/@lowlevelgamedev9330).
+Utilizei um molde de projeto onde o Raylib já estava vinculado ao Cmake para ser buildado junto ao jogo. Este modelo foi distribuído de forma gratuita pelo dono do canal ![LowLevelGameDev](https://www.youtube.com/@lowlevelgamedev9330/featured).
 
-Caso tenha interesse em utilizar este ou outros modelos, sinta-se a vontade para acessar o seguinte ![Video](https://www.youtube.com/watch?v=FrVABOhRyQg).
+Caso tenha interesse em utilizar este ou outros modelos, sinta-se a vontade para acessar o seguinte ![Video](https://www.youtube.com/watch?v=FrVABOhRyQg&t).
 
 ## Pré-requisitos:
 
