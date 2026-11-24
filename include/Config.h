@@ -12,6 +12,8 @@
 
 #define nanoSec std::chrono::nanoseconds
 
+#define internalMethod static
+
 using timePoint = std::chrono::high_resolution_clock::time_point;
 using duration = std::chrono::high_resolution_clock::duration;
 
