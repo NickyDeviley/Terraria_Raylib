@@ -4,20 +4,33 @@
 
 Este projeto consiste no desenvolvimento de um jogo inspirado em Terraria utilizando C++ e a biblioteca Raylib, incorporando recursos autorais (como assets, músicas e efeitos sonoros). O objetivo central é estudar desenvolvimento de jogos desde fundamentos até técnicas mais avançadas.
 
-## Dia 002: Adicionada Hitbox, renderização de um tile de terra.
+## Dia 003: Câmera adicionada, iniciada lógica de Hitbox por aproximação, tileGrid em testes, organização geral do código.
 
-![Day_002_Gif](./ProgressImages/Day002.gif)
+![Day_003_Gif](./ProgressImages/Day003.gif)
 
 ## Lista:
 
 ✅ GameLoop, taxa fixa (60FPS, 120UPS);
 
-✅ Movimentação do jogador;
+✅ Input/Movimentação do jogador;
 
 ✅ Renderizar um tile, adicionar hitbox;
 
-⏳ TileGrid, mais tiles;
+✅ TileGrid (array de tiles que representa o mapa);
 
+✅ Câmera;
+
+⏳ Hitbox por aproximação;
+
+⏳ Sprites e mais tiles;
+
+⏳ Ler informações dos tiles de um TXT;
+
+⏳ Atualização do input;
+
+## Próximo passo:
+
+Vou implementar um calculo dinâmico para a hitbox dos tiles, apenas para os tiles mais próximos do jogador otimizando o código. Também irei atualizar o input substituindo os condicionais.
 
 ## Referência:
 
