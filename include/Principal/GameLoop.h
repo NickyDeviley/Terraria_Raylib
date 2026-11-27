@@ -1,6 +1,6 @@
 #ifndef GAMELOOP_H
 #define GAMELOOP_H
 
-void gameLoop(Player *);
+void gameLoop(void);
 
 #endif

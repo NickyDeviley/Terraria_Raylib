@@ -1,55 +1,37 @@
-#include "Entities/Player/Player.h"
-#include "Config.h"
-#include "Tiles/Dirt.h"
 #include "Principal/GameLoop.h"
+#include "Config.h"
 
+// DEBUG/TEST
+#include "Entities/Player/Player.h"
+#include "World/WorldInput.h"
+
+// Managers
+#include "Principal/Managers/PhysicsManager.h"
+#include "Principal/Managers/EntityManager.h"
+#include "Principal/Managers/WorldManager.h"
+#include "Principal/Managers/TileManager.h"
+
+// Libraries
 #include "raylib.h"
 #include <iostream>
 #include <stdint.h>
 
-internalMethod
-void createWindow()   
-{
-	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Terraria Clone");
-}
+internalMethod void createWindow();
+internalMethod void drawPosition(Player *);
+internalMethod void draw(Player *, ObjectTile *);
+internalMethod void update(Player *);
 
-internalMethod
-void drawPosition(Player *player)
-{
-	// NOTE (Nicholas): Método para Debug que desenha a posição X e Y
-	// do jogador na tela
-	DrawText(TextFormat("PosX: %.2f \nPosY: %.2f",
-		player->posX, player->posY),
-		50, 50, 10, DARKGRAY);
-}
+// Temporary
+internalVar int32_t test[100]{};
+internalVar uint8_t worldIsOpen { openWorld(test) };
+internalVar TileHitbox TileHitBox[100] {};
+internalVar uint8_t TempIndex {0};
+internalVar uint32_t TColisao {0};
+// Temporary
 
-internalMethod
-void draw(Player *player, dirt *tile)
-{
-	// NOTE (Nicholas): Método que desenha todos os sprites do jogo
-	BeginDrawing();
-	ClearBackground(RAYWHITE);
-
-	drawPosition(player);
-
-	DrawRectangle(tile->posX, tile->posY, tile->size, tile->size, BROWN);
-
-	drawPlayer(player);
-
-	EndDrawing();
-}
-
-internalMethod
-bool colidiu(Player *player, dirt *tile)
-{
-	return(player->hb.X <= tile->hb.supD &&
-		   player->hb.supD >= tile->hb.X &&
-		   player->hb.Y <= tile->hb.infE &&
-		   player->hb.infE >= tile->hb.Y);
-}
-
-void gameLoop(Player* player)
+// EXP (Nicky): Método principal que controla o loop do jogo,
+// taxa de quadros e taxa de atualização
+void gameLoop(void)
 {
 	createWindow();
 
@@ -64,89 +46,36 @@ void gameLoop(Player* player)
 	uint8_t FPSCounter{ 0 };
 	uint8_t UPSCounter{ 0 };
 
-	dirt tile {};
-	tile.posX = 200;
-	tile.posY = 200;
-	tile.size = 40;
-	tile.hb = {tile.posX, tile.posY,
-			   tile.posX + tile.size,
-			   tile.posY + tile.size};
+	Player player {createPlayer()};
+	ObjectTile tile {createTile()};
 
+	// NOTE (Nicky): GameLoop
 	while (!WindowShouldClose())
 	{
 		actualTime = std::chrono::high_resolution_clock::now();
-
 		timePassedF = actualTime - lastFrame;
 		timePassedU = actualTime - lastUpdate;
 
+		// NOTE (Nicky): Condicional que atualiza a lógica do jogo
 		if (timePassedU >= DELTA_UPS)
 		{
-			// atualiza a lógica
-
-			// DEBUG
-			//std::cout << colidiu(player, &tile) << std::endl;
-
-			// Movement Logic:
-
-				// MOVE
-			player->isMoving = false;
-			if (IsKeyDown(KEY_RIGHT))
-			{
-				player->direction = Direction::RIGHT;
-				//player->isMoving = true;
-				movePlayer(player);
-			}
-			if (IsKeyDown(KEY_LEFT))
-			{
-				player->direction = Direction::LEFT;
-				//player->isMoving = true;
-				movePlayer(player);
-			}
-			if (IsKeyDown(KEY_UP))
-			{
-				player->direction = Direction::UP;
-				//player->isMoving = true;
-				movePlayer(player);
-			}
-			if (IsKeyDown(KEY_DOWN))
-			{
-				player->direction = Direction::DOWN;
-				//player->isMoving = true;
-				movePlayer(player);
-			}
-
-				// Check Collision
-			player->collision = colidiu(player, &tile);
-
-				// if Collision is true (Teleport Player and hitbox)
-			if (player->collision == true)
-			{
-				player->posX = player->lastPosX;
-				player->posY = player->lastPosY;
-
-				updateCollision(player);
-			}
-
-				// if Collision is false (update lastPosX and lastPosY)
-			player->lastPosX = player->posX;
-			player->lastPosY = player->posY;
-			player->collision = false;
+		
+			update(&player);
 
 			lastUpdate = actualTime;
 			++UPSCounter;
 		}
 
-		if (timePassedF >= DELTA_FPS)	// atualiza o frame
+		// NOTE (Nicky): Condicional que atualiza os gráficos
+		if (timePassedF >= DELTA_FPS)
 		{
-
-			draw(player, &tile);
+			draw(&player, &tile);
 
 			lastFrame = actualTime;
 			++FPSCounter;
 		}
 
-
-		if ((std::chrono::steady_clock::now() - lastCheck) >= (nanoSec)ONE_NANOSECOND)
+		if ((std::chrono::steady_clock::now() - lastCheck) >= (nanoSec)NM_ONE_NANOSECOND)
 		{
 			lastCheck = std::chrono::steady_clock::now();
 			//std::cout << "FPS: " << static_cast<int>(FPSCounter) << std::endl;
@@ -158,4 +87,100 @@ void gameLoop(Player* player)
 	}
 
 	CloseWindow();
+}
+
+// NOTE (Nicky): Método que cria a janela
+internalMethod
+void createWindow()
+{
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+	InitWindow(NM_WINDOW_WIDTH, NM_WINDOW_HEIGHT, "Terraria Clone");
+}
+
+// NOTE (Nicky): Método para Debug que
+// desenha a posição X e Y do jogador na tela
+internalMethod
+void drawPosition(Player* player)
+{
+	DrawText(TextFormat("PosX: %.2f \nPosY: %.2f \n\nColisões: %d",
+			 player->worldPosX, player->worldPosY, TColisao),
+			 50, 50, 10, DARKGRAY);
+}
+
+// NOTE (Nicky): Método que desenha todos os sprites do jogo
+internalMethod
+void draw(Player* player, ObjectTile* tile)
+{
+	BeginDrawing();
+	ClearBackground(RAYWHITE);
+
+	// Desenha o mundo do jogo
+	drawWorld(player, tile, test);
+	
+	// Desenha a posição X e Y do jogador (DEBUG)
+	drawPosition(player);
+
+	// Desenha o Jogador
+	drawPlayer(player);
+
+	EndDrawing();
+}
+
+internalMethod 
+void update(Player *player)
+{
+// WORLD LOGIC/PHYSICS
+
+	// Get Player Position
+	int32_t playerCenterX {(int32_t) player->worldPosX + player->sizeX};
+	int32_t playerCenterY {(int32_t) player->worldPosY + player->sizeY};
+
+	int32_t playerIndexPositionX {(playerCenterX + (tileSize / 2)) / tileSize};
+	int32_t playerIndexPositionY {(playerCenterY + (tileSize / 2)) / tileSize};
+
+	// Identify the tiles Next to the Player
+	
+
+	// Calculate the hitbox
+	TempIndex = 0;
+	for (uint8_t i = 0; i < 10; ++i)
+	{
+		for (uint8_t j = 0; j < 10; ++j)
+		{
+			TileHitBox[TempIndex] = calcWorldHitBox(j, i);
+			++TempIndex;
+		}
+	}
+// WORLD LOGIC/PHYSICS
+
+// PLAYER LOGIC/PHYSICS
+	// Move
+	movePlayer(player);
+
+	// Check Collision
+	for (int i = 0; i < 100; ++i)
+	{
+		player->isColliding = CheckCollision(&(player->hb), &(TileHitBox[i]));
+		if (player->isColliding)
+		{
+			++TColisao;
+			break;
+		}
+	}
+
+	// if Collision is true (Teleport Player and hitbox)
+	if (player->isColliding == true)
+	{
+		player->worldPosX = player->worldLastPosX;
+		player->worldPosY = player->worldLastPosY;
+
+		updateCollision(player);
+	}
+
+	// update lastPosX and lastPosY, reset collision
+	player->worldLastPosX = player->worldPosX;
+	player->worldLastPosY = player->worldPosY;
+	player->isColliding = false;
+// PLAYER LOGIC/PHYSICS
+
 }

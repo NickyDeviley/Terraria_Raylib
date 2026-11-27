@@ -6,6 +6,8 @@ typedef enum EntitiesDirection
 
 	LEFT = 0,
 	RIGHT = 1,
+
+	// Temporary
 	UP = 2,
 	DOWN = 3
 

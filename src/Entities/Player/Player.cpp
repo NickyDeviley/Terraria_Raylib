@@ -1,25 +1,44 @@
 #include "Entities/Player/Player.h"
-#include "Tiles/Dirt.h"
+#include "config.h"
+
 #include "raylib.h"
+#include <iostream>
+#include <stdint.h>
 
 void drawPlayer(Player* player)
 {
-	DrawRectangle(player->posX, player->posY, player->sizeX, player->sizeY, BLACK);
+	DrawRectangle(player->screenPosX,
+				  player->screenPosY,
+				  player->sizeX,
+				  player->sizeY,
+				  player->playerColor);
 }
 
 void movePlayer(Player* player)
 {
-	if (player->direction == RIGHT) { player->posX += player->speed; }
-	if (player->direction == LEFT) { player->posX -= player->speed; }
-	if (player->direction == UP) { player->posY -= player->speed; }
-	if (player->direction == DOWN) { player->posY += player->speed; }
+	// NOTE (Nicky): Atualizar metodo para utilizar
+	// um map e os códigos da tecla em um único
+	if (IsKeyDown(KEY_RIGHT))
+	{
+		player->direction = Direction::RIGHT;
+		player->worldPosX += player->speed;
+	}
+	if (IsKeyDown(KEY_LEFT))
+	{
+		player->direction = Direction::LEFT;
+		player->worldPosX -= player->speed;
+	}
+	if (IsKeyDown(KEY_UP))
+	{
+		player->direction = Direction::UP;
+		player->worldPosY -= player->speed;
+	}
+	if (IsKeyDown(KEY_DOWN))
+	{
+		player->direction = Direction::DOWN;
+		player->worldPosY += player->speed;
+	}
 
 	updateCollision(player);
 }
 
-void updateCollision(Player *player)
-{
-	player->hb = { player->posX, player->posY,
-				   player->posX + player->sizeX,
-				   player->posY + player->sizeY };
-}
